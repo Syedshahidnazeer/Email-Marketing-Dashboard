@@ -69,14 +69,21 @@ def show_all_campaigns_view(df, location_df):
         st.markdown("### Geographical Open Rate")
         if not location_df.empty:
             country_opens = location_df.groupby('Country')['Opens'].sum().reset_index()
-            fig_map = px.choropleth(country_opens, 
-                                locations="Country", 
-                                locationmode='country names',
-                                color="Opens",
-                                hover_name="Country",
-                                color_continuous_scale="Reds",
-                                title="Global Distribution of Email Opens")
-            st.plotly_chart(fig_map, use_container_width=True)
+
+            fig_scatter_geo = px.scatter_geo(
+                country_opens,
+                locations="Country",
+                locationmode='country names',
+                size="Opens",
+                hover_name="Country",
+                projection="natural earth",
+                title="Email Opens by Country",
+                color_discrete_sequence=["#FC3030"]
+            )
+            fig_scatter_geo.update_layout(
+                margin=dict(l=0, r=0, t=40, b=0)
+            )
+            st.plotly_chart(fig_scatter_geo, use_container_width=True)
         else:
             st.info("No location data available to display.")
 
